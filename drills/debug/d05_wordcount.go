@@ -19,6 +19,7 @@ func main() {
 		"a lazy afternoon for a quick nap",
 	}
 	var docs []string
+	var mu sync.Mutex
 	for range 200 {
 		docs = append(docs, base...)
 	}
@@ -29,7 +30,9 @@ func main() {
 	for _, doc := range docs {
 		wg.Go(func() {
 			for _, w := range strings.Fields(doc) {
+				mu.Lock()
 				counts[w]++
+				mu.Unlock()
 			}
 		})
 	}
